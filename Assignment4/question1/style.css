@@ -1,0 +1,25 @@
+.day {
+    background-color: white;
+    color: black;
+    height: 100vh;
+    padding: 20px;
+}
+
+.night {
+    background-color: black;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.button_day {
+    background-color: white;
+    color: black;
+    padding: 10px;
+}
+
+.button_night {
+    background-color: gray;
+    color: white;
+    padding: 10px;
+}
