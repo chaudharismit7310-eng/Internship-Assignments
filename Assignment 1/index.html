@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WANDERLENS — Travel Photography Blog</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0c0a;
+      --surface:   #181410;
+      --card:      #1e1a16;
+      --amber:     #e8a020;
+      --amber-dim: #b87a10;
+      --cream:     #f0e8d8;
+      --muted:     #7a6f62;
+      --border:    #2e2820;
+      --white:     #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--amber);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logo-mark::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .logo-text {
+      font-family: Impact, 'Arial Narrow', Arial, sans-serif;
+      font-size: 26px;
+      letter-spacing: 4px;
+      color: var(--cream);
+    }
+
+    .logo-text span { color: var(--amber); }
+
+    .social-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .social-links a {
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .social-links a:hover { color: var(--amber); }
+
+    .social-links svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    nav a {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 18px 24px;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: var(--amber);
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+    }
+
+    nav a:hover { color: var(--cream); }
+    nav a:hover::after { transform: scaleX(1); }
+    nav a.active { color: var(--amber); }
+    nav a.active::after { transform: scaleX(1); }
+
+    /* ── LAYOUT ── */
+    .page-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 48px 0;
+      align-items: start;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main { padding-right: 48px; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--amber);
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 40px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    /* ── CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--amber-dim);
+      transform: translateX(4px);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+      filter: brightness(0.9) saturate(0.85);
+    }
+
+    .card:hover .card-img-wrap img { transform: scale(1.04); }
+
+    .card-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--amber);
+      color: var(--bg);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+    }
+
+    .card-body {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+
+    .card-link:hover { gap: 14px; }
+    .card-link::after { content: '→'; }
+
+    /* ── SIDEBAR ── */
+    aside {
+      border-left: 1px solid var(--border);
+      padding-left: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .sidebar-block { }
+
+    .sidebar-heading {
+      font-family: Impact, 'Arial Narrow', Arial, sans-serif;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Profile widget */
+    .profile {
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid var(--amber);
+      object-fit: cover;
+      margin: 0 auto 14px;
+      display: block;
+      filter: grayscale(20%);
+    }
+
+    .profile-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .profile-role {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+
+    .profile-bio {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* Destinations widget */
+    .dest-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dest-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .dest-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .dest-list li:hover { color: var(--cream); }
+
+    .dest-count {
+      font-size: 11px;
+      background: var(--border);
+      padding: 2px 8px;
+      border-radius: 20px;
+      color: var(--amber);
+      font-weight: 500;
+    }
+
+    /* Tags widget */
+    .tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    /* Newsletter widget */
+    .newsletter-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 12px 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-input:focus { border-color: var(--amber); }
+    .newsletter-input::placeholder { color: var(--muted); }
+
+    .newsletter-btn {
+      width: 100%;
+      background: var(--amber);
+      color: var(--bg);
+      border: none;
+      padding: 12px;
+      font-family: Impact, 'Arial Narrow', Arial, sans-serif;
+      font-size: 15px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-btn:hover { background: var(--amber-dim); }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 80px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 48px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand .logo-text { font-size: 22px; }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .footer-bottom span { color: var(--amber); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header { animation: fadeUp 0.4s ease both; }
+    nav    { animation: fadeUp 0.4s 0.05s ease both; }
+    main   { animation: fadeUp 0.5s 0.15s ease both; }
+    aside  { animation: fadeUp 0.5s 0.2s ease both; }
+
+    .card { animation: fadeUp 0.5s ease both; }
+    .card:nth-child(1) { animation-delay: 0.25s; }
+    .card:nth-child(2) { animation-delay: 0.35s; }
+    .card:nth-child(3) { animation-delay: 0.45s; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="#" class="logo">
+    <div class="logo-mark"></div>
+    <span class="logo-text">WANDER<span>LENS</span></span>
+  </a>
+
+  <div class="social-links">
+    <!-- Instagram -->
+    <a href="#">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+      Instagram
+    </a>
+    <!-- Twitter/X -->
+    <a href="#">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      Twitter
+    </a>
+    <!-- YouTube -->
+    <a href="#">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+      YouTube
+    </a>
+  </div>
+</header>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="#" class="active">Home</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Contact</a>
+</nav>
+
+<!-- ── PAGE BODY ── -->
+<div class="page-wrapper">
+
+  <!-- MAIN -->
+  <main>
+    <p class="section-label">Featured Stories</p>
+    <h2 class="section-title">The World Through<br><em>a Different Lens</em></h2>
+
+    <div class="cards-grid">
+
+      <!-- Card 1 -->
+      <article class="card">
+        <div class="card-img-wrap">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='220'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23c8864a'/%3E%3Cstop offset='50%25' stop-color='%23a0622a'/%3E%3Cstop offset='100%25' stop-color='%23703d10'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='600' height='220' fill='url(%23g1)'/%3E%3Cellipse cx='300' cy='160' rx='280' ry='60' fill='%23b87332' opacity='0.5'/%3E%3Cellipse cx='150' cy='170' rx='180' ry='50' fill='%23d4944e' opacity='0.4'/%3E%3Ccircle cx='480' cy='50' r='35' fill='%23f5c97a' opacity='0.9'/%3E%3Ctext x='300' y='100' font-family='Georgia,serif' font-size='22' font-weight='bold' fill='%23fff5e0' text-anchor='middle' opacity='0.9'%3ESAHARA DESERT%3C/text%3E%3Ctext x='300' y='130' font-family='Arial,sans-serif' font-size='13' fill='%23f0d8a8' text-anchor='middle' opacity='0.7'%3EMorocco · Algeria · Tunisia%3C/text%3E%3C/svg%3E" alt="Sahara Desert"/>
+          <span class="card-tag">Desert</span>
+        </div>
+        <div class="card-body">
+          <p class="card-meta">April 2026 &nbsp;·&nbsp; 8 min read</p>
+          <h3 class="card-title">Silence & Sand — A Journey Across the Sahara</h3>
+          <p class="card-desc">Beneath a sky blanketed in stars, the Sahara reveals a stillness unlike anything on Earth. We followed a Tuareg caravan three days into the Grand Erg Occidental — no roads, no signals, only dunes.</p>
+          <a href="#" class="card-link">Read Story</a>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="card">
+        <div class="card-img-wrap">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='220'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%231a3a5c'/%3E%3Cstop offset='55%25' stop-color='%232e6e8e'/%3E%3Cstop offset='100%25' stop-color='%230d2233'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='600' height='220' fill='url(%23g2)'/%3E%3Cpolygon points='0,220 80,80 160,140 240,50 320,120 400,60 480,100 600,30 600,220' fill='%231a2d1a' opacity='0.85'/%3E%3Crect x='0' y='150' width='600' height='70' fill='%231a4a6a' opacity='0.6'/%3E%3Cellipse cx='300' cy='155' rx='290' ry='20' fill='%2330688a' opacity='0.4'/%3E%3Ctext x='300' y='95' font-family='Georgia,serif' font-size='22' font-weight='bold' fill='%23d0eeff' text-anchor='middle' opacity='0.95'%3ENORWEGIAN FJORDS%3C/text%3E%3Ctext x='300' y='122' font-family='Arial,sans-serif' font-size='13' fill='%2390c8e8' text-anchor='middle' opacity='0.75'%3EGeirangerfjord · Norway%3C/text%3E%3C/svg%3E" alt="Norwegian Fjords"/>
+          <span class="card-tag">Nordic</span>
+        </div>
+        <div class="card-body">
+          <p class="card-meta">March 2026 &nbsp;·&nbsp; 6 min read</p>
+          <h3 class="card-title">Above the Clouds — Norwegian Fjords in Winter</h3>
+          <p class="card-desc">Geirangerfjord wears its winter coat like armour — icy cliffs, frozen waterfalls, and a profound, cathedral-like silence. We rented a wooden cabin and watched the Aurora from a frozen dock.</p>
+          <a href="#" class="card-link">Read Story</a>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="card">
+        <div class="card-img-wrap">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='220'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230d0d1e'/%3E%3Cstop offset='100%25' stop-color='%231a0a2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='600' height='220' fill='url(%23g3)'/%3E%3Crect x='30' y='80' width='18' height='140' fill='%23e83a6a' opacity='0.8'/%3E%3Crect x='70' y='50' width='25' height='170' fill='%230af0f0' opacity='0.4'/%3E%3Crect x='120' y='100' width='15' height='120' fill='%23e8a020' opacity='0.7'/%3E%3Crect x='155' y='60' width='30' height='160' fill='%23e83a6a' opacity='0.3'/%3E%3Crect x='500' y='70' width='20' height='150' fill='%230af0f0' opacity='0.5'/%3E%3Crect x='535' y='40' width='28' height='180' fill='%23e8a020' opacity='0.4'/%3E%3Crect x='570' y='90' width='18' height='130' fill='%23e83a6a' opacity='0.6'/%3E%3Ctext x='300' y='100' font-family='Georgia,serif' font-size='22' font-weight='bold' fill='%23ffffff' text-anchor='middle' opacity='0.95'%3ETOKYO, JAPAN%3C/text%3E%3Ctext x='300' y='128' font-family='Arial,sans-serif' font-size='13' fill='%230af0f0' text-anchor='middle' opacity='0.75'%3EShinjuku · Shibuya · Yanaka%3C/text%3E%3C/svg%3E" alt="Tokyo Japan"/>
+          <span class="card-tag">Urban</span>
+        </div>
+        <div class="card-body">
+          <p class="card-meta">February 2026 &nbsp;·&nbsp; 10 min read</p>
+          <h3 class="card-title">Neon & Quiet — Contrasts of Modern Tokyo</h3>
+          <p class="card-desc">Tokyo is a paradox — a city of 14 million people where you can find absolute solitude in a temple garden. From Shinjuku's electric chaos to the moss-covered paths of Yanaka, we documented every contradiction.</p>
+          <a href="#" class="card-link">Read Story</a>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside>
+
+    <!-- Photographer Profile -->
+    <div class="sidebar-block">
+      <p class="sidebar-heading">Your Guide</p>
+      <div class="profile">
+        <img class="profile-avatar"
+             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect width='160' height='160' rx='80' fill='%232e2820'/%3E%3Ccircle cx='80' cy='62' r='28' fill='%23e8a020' opacity='0.85'/%3E%3Cellipse cx='80' cy='130' rx='44' ry='32' fill='%23e8a020' opacity='0.7'/%3E%3C/svg%3E"
+             alt="Arjun Mehra"/>
+        <p class="profile-name">Arjun Mehra</p>
+        <p class="profile-role">Travel Photographer</p>
+        <p class="profile-bio">Mumbai-born, world-travelled. I chase light in forgotten corners of the globe — from Ladakh ridgelines to Lisbon alleyways. Photography is my language; the world is my dictionary.</p>
+      </div>
+    </div>
+
+    <!-- Top Destinations -->
+    <div class="sidebar-block">
+      <p class="sidebar-heading">Top Destinations</p>
+      <ul class="dest-list">
+        <li>🇮🇳 Ladakh, India <span class="dest-count">14</span></li>
+        <li>🇮🇸 Iceland <span class="dest-count">11</span></li>
+        <li>🇯🇵 Japan <span class="dest-count">9</span></li>
+        <li>🇲🇦 Morocco <span class="dest-count">7</span></li>
+        <li>🇵🇹 Portugal <span class="dest-count">5</span></li>
+      </ul>
+    </div>
+
+    <!-- Tags -->
+    <div class="sidebar-block">
+      <p class="sidebar-heading">Explore Topics</p>
+      <div class="tags-wrap">
+        <span class="tag">Landscape</span>
+        <span class="tag">Street</span>
+        <span class="tag">Wildlife</span>
+        <span class="tag">Monsoon</span>
+        <span class="tag">Desert</span>
+        <span class="tag">Night Sky</span>
+        <span class="tag">Culture</span>
+        <span class="tag">Food</span>
+        <span class="tag">Adventure</span>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="sidebar-block">
+      <p class="sidebar-heading">Stay In The Loop</p>
+      <input class="newsletter-input" type="email" placeholder="your@email.com"/>
+      <button class="newsletter-btn">Subscribe</button>
+    </div>
+
+  </aside>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <a href="#" class="logo" style="text-decoration:none;">
+        <div class="logo-mark"></div>
+        <span class="logo-text">WANDER<span>LENS</span></span>
+      </a>
+      <p class="footer-tagline">A travel photography journal documenting raw, unfiltered moments from across the globe. We believe every destination has a story — we're just here to capture it.</p>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Navigate</p>
+      <ul class="footer-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About the Author</a></li>
+        <li><a href="#">Services & Prints</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Discover</p>
+      <ul class="footer-links">
+        <li><a href="#">Asia Stories</a></li>
+        <li><a href="#">Europe Diaries</a></li>
+        <li><a href="#">Africa Edition</a></li>
+        <li><a href="#">Americas Files</a></li>
+        <li><a href="#">Photo Workshops</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 <span>WanderLens</span>. All rights reserved. Built with passion & wanderlust.</p>
+    <p>Designed by <span>Smit</span> &nbsp;·&nbsp; Made in <span>Mumbai 🇮🇳</span></p>
+  </div>
+</footer>
+
+</body>
+</html>
